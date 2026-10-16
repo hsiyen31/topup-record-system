@@ -1,0 +1,79 @@
+﻿
+
+.theme-blue {
+    --background-color: #eef6ff;
+    --navbar-color: #5d7fae;
+    --navbar-text-color: #ffffff;
+    --button-primary: #7eaee7;
+    --button-danger: #d88a95;
+    --button-warning: #f2c879;
+    --card-color: #ffffff;
+    --text-color: #3d4b63;
+    --card-text-color: #3d4b63;
+}
+
+
+
+.theme-pink {
+    --background-color: #fff4f8;
+    --navbar-color: #8f6d8d;
+    --navbar-text-color: #ffffff;
+    --button-primary: #d8b7d9;
+    --button-danger: #e29aa7;
+    --button-warning: #f3d3a1;
+    --card-color: #fffdfd;
+    --text-color: #6d5368;
+    --card-text-color: #6d5368;
+}
+
+
+.theme-purple {
+    --background-color: #f7f3ff;
+    --navbar-color: #6f5b96;
+    --navbar-text-color: #ffffff;
+    --button-primary: #b7a7db;
+    --button-danger: #c58ba0;
+    --button-warning: #f0d89f;
+    --card-color: #fffdf8;
+    --text-color: #5f5375;
+    --card-text-color: #5f5375;
+}
+
+
+
+.theme-red {
+    --background-color: #fff5f3;
+    --navbar-color: #7f1818;
+    --navbar-text-color: #ffffff;
+    --button-primary: #d79a9a;
+    --button-danger: #b00000;
+    --button-warning: #d7a765;
+    --card-color: #fffafa;
+    --text-color: #4a2b2b;
+    --card-text-color: #4a2b2b;
+}
+
+.theme-orange {
+    --background-color: #fff7ef;
+    --navbar-color: #9b7047;
+    --navbar-text-color: #ffffff;
+    --button-primary: #e3b07d;
+    --button-danger: #d68f84;
+    --button-warning: #f2cb8c;
+    --card-color: #fffdf8;
+    --text-color: #725743;
+    --card-text-color: #725743;
+}
+
+
+.theme-khaki {
+    --background-color: #f5f1e8;
+    --navbar-color: #7d6a4d;
+    --navbar-text-color: #ffffff;
+    --button-primary: #b8a27d;
+    --button-danger: #b97c73;
+    --button-warning: #d8bf8d;
+    --card-color: #fffdf8;
+    --text-color: #6d5d45;
+    --card-text-color: #6d5d45;
+}

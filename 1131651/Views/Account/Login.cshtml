@@ -1,0 +1,257 @@
+﻿@model _1131651.Models.User
+
+@{
+    ViewData["Title"] = "會員登入";
+}
+
+<div class="login-root">
+    @if (TempData["LogoutMessage"] != null)
+    {
+        <script>
+            alert(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(TempData["LogoutMessage"])));
+        </script>
+    }
+    <div class="login-navbar">
+        <div class="login-title-nav">
+            儲值記錄系統
+        </div>
+    </div>
+
+    <div class="login-content">
+
+        <div class="login-box">
+
+            <h2 class="login-title">會員登入</h2>
+
+            <form asp-action="Login" method="post">
+
+                <div class="input-row">
+                    
+                    <label>帳號</label>
+
+                    <input asp-for="Account"
+                           class="form-control"
+                           placeholder="請輸入帳號" />
+                </div>
+
+                <div class="input-row">
+                    <label>密碼</label>
+
+                    <input asp-for="Password"
+                           type="password"
+                           class="form-control"
+                           placeholder="請輸入密碼" />
+                </div>
+                <div class="demo-account">
+
+                    測試帳號：user1　
+                    測試密碼：1234
+
+                </div>
+                @if (ViewBag.Message != null)
+                {
+                    <p class="error-message">@ViewBag.Message</p>
+                }
+
+                <div class="bottom-actions">
+
+                    <button type="submit" class="btn login-btn">
+                        登入
+                    </button>
+
+                    <div class="register-link">
+                        還沒有帳號？
+                        <a asp-controller="Account"
+                           asp-action="Register">
+                            去註冊
+                        </a>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="page-footer">
+    <div>
+        <div>design by: 1131651</div>
+        <div>禮包資料參考：戀與深空儲值中心</div>
+    </div>
+</div>
+<style>
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100%;
+        overflow-x: hidden;
+    }
+
+    .container,
+    main {
+        max-width: none !important;
+        width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .login-root {
+        min-height: 100vh;
+        padding-top: 72px;
+        background-color: #eef6ff;
+        color: #3d4b63;
+    }
+
+    .login-navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 72px;
+        background-color: #5d7fae;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+        z-index: 9999;
+    }
+
+    .login-title-nav {
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .login-content {
+        min-height: 100vh;
+        padding-top: 135px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .page-footer {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 70px;
+        background-color: #5d7fae;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        line-height: 1.5;
+        font-size: 13px;
+        font-weight: 500;
+        box-shadow: 0 -4px 14px rgba(0,0,0,0.12);
+        z-index: 9999;
+    }
+    .demo-account {
+        text-align: center;
+        margin-top: -8px;
+        margin-bottom: 10px;
+        font-size: 17px;
+        color: #6f7c92;
+        background-color: rgba(255,255,255,0.55);
+        border-radius: 10px;
+        padding: 10px;
+    }
+    .login-box {
+        width: 720px;
+        background-color: white;
+        border: 2px solid #3d4b63;
+        border-radius: 20px;
+        padding: 45px 70px 55px 70px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+    }
+
+    .login-title {
+        text-align: center;
+        margin-bottom: 45px;
+        font-size: 42px;
+        font-weight: bold;
+    }
+
+    .input-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 35px;
+    }
+
+        .input-row label {
+            width: 90px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 20px;
+            text-align: right;
+        }
+
+        .input-row .form-control {
+            width: 380px;
+            height: 52px;
+            font-size: 20px;
+            border: 2px solid #3d4b63;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+    .bottom-actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        margin-top: 45px;
+    }
+
+    .login-btn {
+        width: 140px;
+        height: 52px;
+        background-color: #7eaee7;
+        border: none;
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
+        border-radius: 10px;
+        transition: all 0.18s ease;
+    }
+
+        .login-btn:hover {
+            transform: scale(1.06);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+            background-color: #5d7fae;
+            color: white;
+        }
+
+    .register-link {
+        font-size: 18px;
+    }
+
+        .register-link a {
+            text-decoration: underline;
+            font-weight: bold;
+            color: #5d7fae;
+        }
+
+            .register-link a:hover {
+                opacity: 0.75;
+            }
+
+    .error-message {
+        color: #d88a95;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+</style>

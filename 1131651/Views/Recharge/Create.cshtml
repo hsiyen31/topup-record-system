@@ -1,0 +1,642 @@
+﻿@model _1131651.ViewModels.CreateRechargeViewModel
+
+@{
+    ViewData["Title"] = "新增儲值紀錄";
+
+    string themeCode = ViewBag.ThemeCode ?? "blue";
+
+    var selectedPoolTypeName = Model.PoolTypes
+        .FirstOrDefault(x => x.Value == Model.PoolTypeId.ToString())?.Text;
+}
+
+<div class="theme-root theme-@themeCode">
+
+    <div class="page-navbar">
+        <div class="page-user">@ViewBag.UserName</div>
+
+        <div class="page-title">新增記錄</div>
+
+        
+    </div>
+
+    <form asp-action="Create" method="post" onsubmit="return checkFormBeforeSubmit();">
+
+        <div class="top-section">
+            <div class="form-group">
+                <label>卡池名稱</label>
+                <input asp-for="PoolName"
+                       class="form-control"
+                       placeholder="請輸入卡池名稱" />
+            </div>
+
+            <div class="form-group">
+                <label>卡池類型</label>
+                <select asp-for="PoolTypeId"
+                        asp-items="Model.PoolTypes"
+                        class="form-control"
+                        onchange="changePoolType(this)">
+                    <option value="" disabled selected hidden>
+                        ▽ 請選擇卡池類型
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <hr class="full-line" />
+
+        <div class="selected-type-box">
+            @(string.IsNullOrEmpty(selectedPoolTypeName) ? "尚未選擇卡池類型" : selectedPoolTypeName)
+        </div>
+
+        <div class="package-area">
+            @if (Model.PackageItems.Count > 0)
+            {
+                <div class="package-grid">
+                    @for (int i = 0; i < Model.PackageItems.Count; i++)
+                    {
+                        <div class="package-card">
+                            <h4>@Model.PackageItems[i].PackageName</h4>
+
+                            <p class="limit-text">限購 @Model.PackageItems[i].LimitQuantity</p>
+
+                            <p class="price">NT$ @Model.PackageItems[i].Price</p>
+
+                            <input type="hidden" asp-for="PackageItems[i].PackageId" />
+                            <input type="hidden" asp-for="PackageItems[i].PackageName" />
+                            <input type="hidden" asp-for="PackageItems[i].Price" />
+                            <input type="hidden" asp-for="PackageItems[i].LimitQuantity" />
+
+                            <div class="quantity-control">
+                                <button type="button"
+                                        class="minus-btn"
+                                        onclick="changeQuantity(@i, -1)">
+                                    －
+                                </button>
+
+                                <input asp-for="PackageItems[i].Quantity"
+                                       class="quantity-input"
+                                       min="0"
+                                       max="@Model.PackageItems[i].LimitQuantity"
+                                       data-price="@Model.PackageItems[i].Price"
+                                       data-name="@Model.PackageItems[i].PackageName" />
+
+                                <button type="button"
+                                        class="plus-btn"
+                                        onclick="changeQuantity(@i, 1)">
+                                    +
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="empty-text">請先選擇卡池類型</p>
+            }
+        </div>
+
+        <div id="darkOverlay" onclick="toggleCart()"></div>
+
+        <div id="cartPopup">
+            <div class="cartPopupHeader">
+                <h4>購物車明細</h4>
+                <button type="button" onclick="toggleCart()" class="cartCloseBtn">×</button>
+            </div>
+
+            <hr />
+
+            <div id="cartItems">
+                尚未選擇禮包
+            </div>
+        </div>
+
+        <div id="bottomCartBar">
+            <div id="cartIconArea" onclick="toggleCart()">
+                🛒
+                <span id="cartCount">0</span>
+            </div>
+
+            <div id="bottomTotal">
+                總計：
+                <span id="totalAmount">0</span> 元
+            </div>
+
+            <button type="submit" class="btn btn-primary bottomBtn">
+                儲存紀錄
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary bottomBtn">
+                返回
+            </a>
+        </div>
+    </form>
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+        }
+
+        .container,
+        main {
+            max-width: none !important;
+            width: 100% !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        .theme-root {
+            width: 100%;
+            min-height: 100vh;
+            padding-top: 72px;
+            padding-bottom: 120px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        .page-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background-color: var(--navbar-color);
+            color: var(--navbar-text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+            z-index: 9999;
+        }
+
+        .page-user {
+            position: absolute;
+            left: 35px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            position: absolute;
+            right: 35px;
+            text-decoration: none;
+            border: 2px solid var(--navbar-text-color);
+            color: var(--navbar-text-color);
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: all 0.18s ease;
+        }
+
+            .back-btn:hover {
+                transform: scale(1.05);
+                background-color: rgba(255,255,255,0.12);
+                color: var(--navbar-text-color);
+            }
+
+        .top-section {
+            width: 100%;
+            display: flex;
+            gap: 70px;
+            justify-content: center;
+            align-items: center;
+            padding: 45px 20px 35px 20px;
+            box-sizing: border-box;
+        }
+
+        .form-group {
+            width: 320px;
+            text-align: center;
+        }
+
+            .form-group label {
+                display: block;
+                font-size: 22px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+
+            .form-group .form-control {
+                height: 52px;
+                text-align: center;
+                font-size: 20px;
+                border: 2px solid var(--text-color);
+                border-radius: 6px;
+                background-color: var(--card-color);
+                color: var(--card-text-color);
+            }
+
+        .full-line {
+            width: 100%;
+            margin: 0;
+            border-color: rgba(0,0,0,0.12);
+        }
+
+        .selected-type-box {
+            width: 300px;
+            margin: 25px auto;
+            border: 2px solid var(--text-color);
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            border-radius: 6px;
+            background-color: var(--card-color);
+            color: var(--card-text-color);
+        }
+
+        .package-area {
+            width: calc(100% - 80px);
+            box-sizing: border-box;
+            border: 2px solid var(--text-color);
+            padding: 35px;
+            margin: 0 40px 40px 40px;
+            min-height: 350px;
+            background-color: var(--card-color);
+            color: var(--card-text-color);
+        }
+
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 30px;
+        }
+
+        .package-card {
+            border: 2px solid rgba(0,0,0,0.35);
+            padding: 20px;
+            border-radius: 6px;
+            background-color: var(--card-color);
+            color: var(--card-text-color);
+            transition: all 0.2s ease;
+        }
+
+            .package-card:hover {
+                transform: translateY(-3px) scale(1.01);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            }
+
+            .package-card h4 {
+                font-weight: bold;
+                margin-bottom: 12px;
+            }
+
+        .limit-text {
+            color: var(--button-danger);
+            opacity: 0.75;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--button-danger);
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+            .quantity-control button {
+                width: 38px;
+                height: 38px;
+                border: 1px solid #bbb;
+                background-color: var(--card-color);
+                color: var(--card-text-color);
+                font-size: 22px;
+                font-weight: 900;
+                transition: all 0.15s ease;
+            }
+
+                .quantity-control button:hover {
+                    transform: scale(1.08);
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+                }
+
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            font-weight: bold;
+            background-color: var(--card-color);
+            color: var(--card-text-color);
+            border: 1px solid #bbb;
+        }
+
+        .empty-text {
+            text-align: center;
+            font-size: 20px;
+            color: var(--text-color);
+        }
+
+        #bottomCartBar {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 70px;
+            background-color: var(--navbar-color);
+            color: var(--navbar-text-color);
+            border-top: 1px solid rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            padding: 15px 40px;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.12);
+            z-index: 9999;
+            box-sizing: border-box;
+        }
+
+        #cartIconArea {
+            position: relative;
+            font-size: 34px;
+            cursor: pointer;
+            width: 65px;
+            text-align: center;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.35));
+            transition: all 0.2s ease;
+        }
+
+            #cartIconArea:hover {
+                transform: scale(1.08);
+                filter: drop-shadow(0 6px 10px rgba(0,0,0,0.45));
+            }
+
+        #cartCount {
+            position: absolute;
+            top: -8px;
+            right: 4px;
+            background-color: var(--button-danger);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            line-height: 24px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #bottomTotal {
+            font-size: 24px;
+            font-weight: bold;
+            flex: 1;
+        }
+
+        #totalAmount {
+            color: var(--button-warning);
+            font-size: 34px;
+            font-weight: bold;
+        }
+
+        .bottomBtn {
+            width: 150px;
+            height: 50px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        button,
+        .btn,
+        .quantity-control button,
+        .cartCloseBtn,
+        #cartIconArea {
+            transition: all 0.18s ease;
+        }
+
+            button:hover,
+            .btn:hover,
+            .quantity-control button:hover,
+            .cartCloseBtn:hover,
+            #cartIconArea:hover {
+                transform: scale(1.06);
+                box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+            }
+
+            .quantity-control button:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+                transform: none !important;
+                box-shadow: none !important;
+            }
+
+        #darkOverlay {
+            display: none;
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 90px;
+            background-color: rgba(0,0,0,0.55);
+            z-index: 9997;
+        }
+
+        #cartPopup {
+            display: none;
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 90px;
+            background-color: var(--card-color);
+            color: var(--card-text-color);
+            border-radius: 24px 24px 0 0;
+            padding: 30px 45px;
+            max-height: 55vh;
+            overflow-y: auto;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.25);
+            z-index: 9998;
+            box-sizing: border-box;
+        }
+
+        .cartPopupHeader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cartCloseBtn {
+            border: none;
+            background-color: var(--button-danger);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #cartItems p {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .pooltype-select {
+            color: #999;
+        }
+
+            .pooltype-select:valid {
+                color: #222;
+            }
+
+        .btn-primary {
+            background-color: var(--button-primary) !important;
+            border-color: var(--button-primary) !important;
+            color: white !important;
+        }
+
+        .btn-secondary,
+        .btn-warning {
+            background-color: var(--button-warning) !important;
+            border-color: var(--button-warning) !important;
+            color: var(--text-color) !important;
+        }
+
+        .btn-danger {
+            background-color: var(--button-danger) !important;
+            border-color: var(--button-danger) !important;
+            color: white !important;
+        }
+    </style>
+
+    <script>
+        function changePoolType(select) {
+            let poolName = document.querySelector("[name='PoolName']").value;
+
+            location.href = '?poolTypeId=' + select.value
+                + '&poolName=' + encodeURIComponent(poolName);
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            let count = 0;
+            let cartHtml = "";
+
+            document.querySelectorAll(".quantity-input").forEach(function (input) {
+                let price = parseInt(input.dataset.price);
+                let quantity = parseInt(input.value);
+                let name = input.dataset.name;
+
+                if (isNaN(quantity)) {
+                    quantity = 0;
+                }
+
+                if (quantity > 0) {
+                    let subTotal = price * quantity;
+
+                    total += subTotal;
+                    count += quantity;
+
+                    cartHtml += "<p>" + name + " × " + quantity + "（小計 " + subTotal + " 元）</p>";
+                }
+            });
+
+            document.getElementById("totalAmount").innerText = total;
+            document.getElementById("cartCount").innerText = count;
+
+            if (cartHtml === "") {
+                document.getElementById("cartItems").innerHTML = "尚未選擇禮包";
+            } else {
+                document.getElementById("cartItems").innerHTML = cartHtml;
+            }
+        }
+
+        function changeQuantity(index, amount) {
+
+            let input = document.querySelector(
+                "[name='PackageItems[" + index + "].Quantity']"
+            );
+
+            let current = parseInt(input.value);
+
+            let max = parseInt(input.max);
+
+            if (isNaN(current)) {
+                current = 0;
+            }
+
+            current += amount;
+
+            if (current < 0) {
+                current = 0;
+            }
+
+            if (current > max) {
+                current = max;
+            }
+
+            input.value = current;
+
+            let card = input.closest(".package-card");
+
+            let minusBtn = card.querySelector(".minus-btn");
+
+            let plusBtn = card.querySelector(".plus-btn");
+
+            minusBtn.disabled = current <= 0;
+            plusBtn.disabled = current >= max;
+
+            calculateTotal();
+        }
+
+        function toggleCart() {
+            let popup = document.getElementById("cartPopup");
+            let overlay = document.getElementById("darkOverlay");
+
+            if (popup.style.display === "none" || popup.style.display === "") {
+                popup.style.display = "block";
+                overlay.style.display = "block";
+            } else {
+                popup.style.display = "none";
+                overlay.style.display = "none";
+            }
+        }
+
+        function checkFormBeforeSubmit() {
+            let poolName = document.querySelector("[name='PoolName']").value.trim();
+
+            if (poolName === "") {
+                alert("請先輸入卡池名稱");
+                return false;
+            }
+
+            let hasPackage = false;
+
+            document.querySelectorAll(".quantity-input").forEach(function (input) {
+                let quantity = parseInt(input.value);
+
+                if (!isNaN(quantity) && quantity > 0) {
+                    hasPackage = true;
+                }
+            });
+
+            if (!hasPackage) {
+                alert("請至少選擇一個禮包數量");
+                return false;
+            }
+
+            return true;
+        }
+
+        document.querySelectorAll(".quantity-input").forEach(function (input) {
+            input.addEventListener("input", calculateTotal);
+        });
+    </script>
+
+</div>

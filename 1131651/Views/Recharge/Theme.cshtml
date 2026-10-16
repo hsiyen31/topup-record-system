@@ -1,0 +1,347 @@
+﻿@{
+    ViewData["Title"] = "Theme";
+
+    string currentTheme = ViewBag.CurrentTheme ?? "blue";
+    string themeCode = ViewBag.ThemeCode ?? "blue";
+}
+
+<div class="theme-root theme-@themeCode">
+
+    <div class="theme-navbar">
+        <div class="theme-nav-title">更改主題</div>
+
+        <a asp-action="Index" class="back-btn">
+            返回
+        </a>
+    </div>
+
+    <div class="theme-select-box">
+        <form asp-action="Theme" method="post">
+
+            <input type="hidden"
+                   id="themeCodeInput"
+                   name="themeCode"
+                   value="@currentTheme" />
+
+            <div class="theme-grid">
+
+                <label class="theme-option">
+                    <input type="radio"
+                           name="themeRadio"
+                           value="blue"
+                           checked="@(currentTheme == "blue")"
+                           onchange="previewTheme('blue')" />
+                    <span class="theme-circle blue"></span>
+                    <span class="theme-name">blue</span>
+                </label>
+
+                <label class="theme-option">
+                    <input type="radio"
+                           name="themeRadio"
+                           value="pink"
+                           checked="@(currentTheme == "pink")"
+                           onchange="previewTheme('pink')" />
+                    <span class="theme-circle pink"></span>
+                    <span class="theme-name">pink</span>
+                </label>
+
+                <label class="theme-option">
+                    <input type="radio"
+                           name="themeRadio"
+                           value="purple"
+                           checked="@(currentTheme == "purple")"
+                           onchange="previewTheme('purple')" />
+                    <span class="theme-circle purple"></span>
+                    <span class="theme-name">purple</span>
+                </label>
+
+                <label class="theme-option">
+                    <input type="radio"
+                           name="themeRadio"
+                           value="red"
+                           checked="@(currentTheme == "red")"
+                           onchange="previewTheme('red')" />
+                    <span class="theme-circle red"></span>
+                    <span class="theme-name">red</span>
+                </label>
+
+                <label class="theme-option">
+                    <input type="radio"
+                           name="themeRadio"
+                           value="orange"
+                           checked="@(currentTheme == "orange")"
+                           onchange="previewTheme('orange')" />
+                    <span class="theme-circle orange"></span>
+                    <span class="theme-name">orange</span>
+                </label>
+
+                <label class="theme-option">
+                    <input type="radio"
+                           name="themeRadio"
+                           value="khaki"
+                           checked="@(currentTheme == "khaki")"
+                           onchange="previewTheme('khaki')" />
+                    <span class="theme-circle khaki"></span>
+                    <span class="theme-name">khaki</span>
+                </label>
+
+            </div>
+
+            <div class="save-area">
+                <button type="submit" class="save-btn">
+                    儲存主題
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="preview-title">
+        主題預覽
+    </div>
+
+    <div class="iframe-wrapper">
+        <iframe id="previewFrame"
+                src="/Recharge/Index?preview=true&theme=@currentTheme"
+                class="preview-iframe">
+        </iframe>
+
+        <div class="iframe-lock"></div>
+    </div>
+
+    <div class="theme-footer">
+        <div>
+            <div>design by: 1131651</div>
+            <div>禮包資料參考：戀與深空儲值中心</div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100%;
+        overflow-x: hidden;
+    }
+
+    .container,
+    main {
+        max-width: none !important;
+        width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .theme-root {
+        width: 100%;
+        min-height: 100vh;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        padding-top: 72px;
+        padding-bottom: 100px;
+        overflow-x: hidden;
+    }
+
+    .theme-navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 72px;
+        background-color: var(--navbar-color);
+        color: var(--navbar-text-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+        z-index: 9999;
+    }
+
+    .theme-nav-title {
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .back-btn {
+        position: absolute;
+        right: 35px;
+        text-decoration: none;
+        background-color: var(--button-primary);
+        color: white;
+        padding: 10px 24px;
+        border-radius: 10px;
+        font-weight: bold;
+        border: none;
+        transition: all 0.18s ease;
+    }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            filter: brightness(0.95);
+            color: white;
+        }
+
+    .theme-select-box {
+        width: 520px;
+        margin: 50px auto 40px auto;
+        border: 2px solid rgba(0,0,0,0.15);
+        border-radius: 18px;
+        background-color: var(--card-color);
+        color: var(--card-text-color);
+        padding: 35px;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+    }
+
+    .theme-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+    }
+
+    .theme-option {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        cursor: pointer;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+        .theme-option input {
+            display: none;
+        }
+
+    .theme-circle {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: 0 0 0 2px rgba(0,0,0,0.15);
+        transition: all 0.18s ease;
+    }
+
+    .theme-option:hover .theme-circle {
+        transform: scale(1.08);
+    }
+
+    .theme-option input:checked + .theme-circle {
+        box-shadow: 0 0 0 4px rgba(0,0,0,0.18);
+    }
+
+    .save-area {
+        text-align: center;
+        margin-top: 35px;
+    }
+
+    .save-btn {
+        border: none;
+        background-color: var(--button-primary);
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 12px 40px;
+        border-radius: 12px;
+        transition: all 0.18s ease;
+    }
+
+        .save-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+    .preview-title {
+        text-align: center;
+        font-size: 34px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .iframe-wrapper {
+        position: relative;
+        width: 1220px;
+        height: 760px;
+        margin: 0 auto 50px auto;
+        overflow: hidden;
+        border-radius: 24px;
+        box-shadow: 0 10px 26px rgba(0,0,0,0.14);
+        background-color: var(--card-color);
+    }
+
+    .preview-iframe {
+        width: 1600px;
+        height: 1000px;
+        border: none;
+        transform: scale(0.76);
+        transform-origin: top left;
+    }
+
+    .iframe-lock {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        z-index: 10;
+    }
+
+    .theme-footer {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 70px;
+        background-color: var(--navbar-color);
+        color: var(--navbar-text-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        line-height: 1.5;
+        font-size: 13px;
+        font-weight: 500;
+        box-shadow: 0 -4px 14px rgba(0,0,0,0.12);
+        z-index: 9999;
+    }
+
+    .blue {
+        background: linear-gradient(135deg,#edf6ff,#5f89c7);
+    }
+
+    .pink {
+        background: linear-gradient(135deg,#fdeef3,#cba9c9);
+    }
+
+    .purple {
+        background: linear-gradient(135deg,#ebe3fa,#8f79b7);
+    }
+
+    .red {
+        background: linear-gradient(135deg,#7f1818,#2a2a2a);
+    }
+
+    .orange {
+        background: linear-gradient(135deg,#fff1df,#d9a06d);
+    }
+
+    .khaki {
+        background: linear-gradient(135deg,#f2eadf,#9e8664);
+    }
+</style>
+
+<script>
+    function previewTheme(themeCode) {
+        document.getElementById("themeCodeInput").value = themeCode;
+
+        document.getElementById("previewFrame").src =
+            "/Recharge/Index?preview=true&theme=" + themeCode;
+    }
+</script>
