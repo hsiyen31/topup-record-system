@@ -65,7 +65,7 @@
 
 集中呈現會員建立的儲值紀錄，包含卡池名稱、禮包購買明細及儲值金額，並提供紀錄管理與查詢功能。
 
-![儲值紀錄首頁](screenshots/records.png)
+![儲值紀錄首頁](screenshots/record.png)
 
 ### 2. 禮包選購與金額計算
 
@@ -87,9 +87,7 @@
 
 ![主題選擇與預覽](screenshots/themes1.png)
 
-**主題選擇與預覽畫面**
-
-![主題選擇與預覽畫面](screenshots/themes2.png)
+![主題選擇與預覽](screenshots/themes2.png)
 
 ## 五、系統架構與資料庫設計
 
