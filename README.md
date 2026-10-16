@@ -61,6 +61,9 @@
 
 ## 四、系統畫面展示
 
+本影片展示個人儲值記錄系統的實際操作流程，包含主要功能及使用者介面。
+
+[▶ 觀看系統操作 Demo（YouTube）](https://youtu.be/c0G5WDkrgSk?si=K66eUhIcsn9q8n6v)
 
 ### 1. 儲值紀錄首頁
 
@@ -153,9 +156,4 @@
 
 [查看完整系統設計文件（PDF）](個人儲值記錄系統.pdf)
 
-## 十、系統操作影片（Demo）
-
-本影片展示個人儲值記錄系統的實際操作流程，包含主要功能及使用者介面。
-
-[▶ 觀看系統操作 Demo（YouTube）](https://youtu.be/c0G5WDkrgSk?si=K66eUhIcsn9q8n6v)
 
