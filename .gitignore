@@ -1,0 +1,21 @@
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build files
+bin/
+obj/
+
+# Local database files
+*.mdf
+*.ldf
+
+# Local secrets
+secrets.json
+appsettings.Local.json
+
+# System files
+Thumbs.db
+.DS_Store
